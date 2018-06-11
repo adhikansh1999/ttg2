@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	<title>
+		Index
+	</title>
+	<!--<script type="text/javascript" src="java.js"></script>-->
+	<script>
+		var grid = new Array(9);
+		var text =" <thead> <tr> <th> Winner </th> <th> Time </th> </tr> </thead>";
+		for ( var i = 0; i < grid.length; i++) {
+				grid[i] = 0;
+			}
+
+		function initialise(){
+			for ( var i = 0; i < grid.length; i++) {
+				grid[i] = 0;
+				document.getElementById(i.toString()).innerHTML = "";
+			}
+		}
+		function display_grid() {
+			for ( var i = 0,k=0; i < 3; i++) {
+				for ( j = 0; j < 3; j++,k++) {
+					document.write(grid[k] + " " );
+					//document.getElementById("demo").innerHTML = "grid[k] <br>";
+				}
+				document.write("<br>");
+			}
+		}
+		function random_no(){
+			return Math.floor(Math.random() * 9);
+		}
+		function tableAndHighlight(p,q,r,val){
+			//highlighting
+			var message,color;
+			if(val == 1 || val == 2){
+				document.getElementById(p.toString()).innerHTML = "<img src='win.png' height='96px' width='96px'>";
+				document.getElementById(q.toString()).innerHTML = "<img src='win.png' height='96px' width='96px'>";
+				document.getElementById(r.toString()).innerHTML = "<img src='win.png' height='96px' width='96px'>";
+			}
+			if (val == 1){
+				message = "You Win";
+				color = "green"
+			}
+			if (val == 2){
+				message = "Comp Win";
+				color = "red";
+			}
+			else if(val == -1){
+				message = "Draw";
+				color = "yellow";
+			}
+			var time = new Date();
+			text += "<tr background-color = " + color + "><td>"+message+"</td><td>"+time.getHours()+":"+time.getMinutes()+":"+ time.getSeconds() +"</td></tr>";
+			 document.getElementById("tab").innerHTML = text;
+
+
+
+		}
+
+		function check_win(){
+			//1 means 1 win 2 means 2 win 0 means no win -1 means draw
+			for (var i = 0; i < grid.length;i = i + 3 ) {
+				if(grid[i] == grid[i+1] && grid[i] == grid[i+2])
+				{
+
+					if(grid[i] == 1){
+						tableAndHighlight(i,i+1,i+2,1);
+						return 1;
+					}
+					else if(grid[i] == 2){
+						tableAndHighlight(i,i+1,i+2,2);
+						return 2;
+					}
+				}
+			}
+			for (var i = 0; i < 3; i++) {
+				if(grid[i] == grid[i+3] && grid[i] == grid[i+6])
+				{
+					if(grid[i] == 1){
+						tableAndHighlight(i,i+3,i+6,1);
+						return 1;
+					}
+					else if(grid[i] == 2){
+						tableAndHighlight(i,i+3,i+6,2);
+					 	return 2;
+					}
+				}
+			}
+			if(grid[0] == grid[4] && grid[0] == grid[8]){
+				if(grid[0] == 1){
+					tableAndHighlight(0,4,8,1);
+					return 1;
+				}	
+				else if(grid[0] == 2){
+					tableAndHighlight(0,4,8,2);
+				 	return 2;
+				}
+			}
+			if(grid[2] == grid[4] && grid[2] == grid[6]){
+				if(grid[2] == 1){
+					tableAndHighlight(2,4,6,1);
+						return 1;
+				}		
+					else if(grid[2] == 2){
+					 	tableAndHighlight(2,4,6,2);
+						return 2;
+					}	
+			}
+			for (var i = 0; i < grid.length; i++) {
+				if(grid[i] == 0)
+					return 0;
+			}
+			tableAndHighlight(0,0,0,-1);
+			return -1;
+
+		}
+		function myFunction() {
+			initialise();
+		    var person = prompt("Please enter your name", "Harry Potter");
+		    if (person != null) {
+		        document.getElementById("demo").innerHTML =
+		        "Hello " + person + "! How are you today?";
+		    }
+		}
+		function take_turn(div_name){
+			//check whether free if not give an alert or something.
+			if(grid[Number(div_name)] != 0)
+				alert("Hey! choose a valid place");
+			else{
+				//check if win(or not)
+				//adding to the grid and the display for the user
+				document.getElementById(div_name).innerHTML = "<img src='x.png' height='96px' width='96px'>";
+				grid[Number(div_name)] = 1;
+				//adding turn for the computer.
+					//choose the place which is zero out of all the places.
+					for(var i=0;i < 1000;i++){
+						var no = random_no(); 
+						if(grid[no] == 0)
+						{
+							document.getElementById(no.toString()).innerHTML = "<img src='o.png' height='96px' width='96px'>";
+							grid[no] = 2;
+							break;
+						}
+					}
+
+				//check if win
+					winner = check_win();
+					if(winner == 1 || winner == 2){
+						document.getElementById("demo").innerHTML =
+		        		"Congrats" + winner + "you won!!";
+		        		//initialise();
+
+		        	}
+		        	else if(winner == -1){
+		        		document.getElementById("demo").innerHTML =
+		        		"Match drawn!!";
+		        		//initialise();
+		        	}
+
+					//if win call a function to do some other stuff.
+				//
+				//display_grid();
+			}
+		}
+		//function to highlight the winner boxes and add to the table
+
+	</script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	
+	<style type="text/css">
+	* {
+	  -webkit-box-sizing: border-box;
+	     -moz-box-sizing: border-box;
+	          box-sizing: border-box;
+		}
+
+		#outerbox{
+			border: solid #000000 5px;
+			max-width: 310px;
+			height: 310px;
+			margin: 0 auto;
+		}
+		.innerbox{
+			float: left;
+			width : 100px;
+			min-height: 100px;
+			border: solid #1AAB8A 2px;
+			margin: 0px;
+			
+		}
+		#mytable{
+			margin: 0 auto;
+			max-width: 400px;
+		}
+		table {
+		    border-collapse: collapse;
+		    width: 100%;
+		}
+
+		th, td {
+		    text-align: left;
+		    padding: 8px;
+		}
+
+		/*tr:nth-child(even){background-color: #f2f2f2}*/
+
+		th {
+		    background-color: #1AAB8A;
+		    color: white;
+		}
+		#tab{
+
+		}
+
+
+	</style>
+</head>
+<body>
+<!--<body onload="myFunction()">-->
+	
+	<div id="menu">
+		<div id="Restart">
+			<button onclick="initialise()">Restart</button>
+		</div>
+		<div id= "quit">
+			<a href="tictac.html"><button>Quit</button></a>
+		</div>
+
+	</div>	
+	<p id="demo"></p>
+
+	<div id="outerbox">
+		<!--the plan is to make a function that runs on clicking a div
+			the parameters to the function will be the id of the div
+			then using innerhtml shizz we can add image to the div.
+			doubts which image to do.
+			whose turn it is.
+			what happens when already contains an image.
+				-->
+		<div class="innerbox" id = "0" onclick="take_turn('0')"></div>
+		<div class="innerbox" id = "1" onclick="take_turn('1')"></div>
+		<div class="innerbox"  id = "2" onclick="take_turn('2')"></div>
+		<div class="innerbox"   id = "3" onclick="take_turn('3')"></div>
+		<div class="innerbox"  id = "4" onclick="take_turn('4')"></div>
+		<div class="innerbox"  id = "5" onclick="take_turn('5')"></div>
+		<div class="innerbox"  id = "6" onclick="take_turn('6')"></div>
+		<div class="innerbox"  id = "7" onclick="take_turn('7')"></div>
+		<div class="innerbox"  id = "8" onclick="take_turn('8')"></div>
+
+	</div>
+	<div id="mytable">
+	<table border="solid" id = "tab">
+	<!--	
+		<thead>
+	        <tr>
+	            <th>Winner</th>
+	            <th>Time</th>
+	        </tr>
+	    </thead>
+	        <tr>
+	            <td>Accord</td>
+	            <td>2009</td>
+	        </tr>
+	-->
+	</table>
+	</div>
+
+
+
+</body>
+</html>
